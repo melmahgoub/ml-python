@@ -1,72 +1,29 @@
 #!/usr/bin/env python
 # coding: utf-8
+# Jupyter notebook with 1 core and 4 GB of RAM using the Python 3 anaconda3 2019.3 kernel.
 
-# ## Question 2
-
-# ### A
-
-# In[1]:
-
+'''
+Summary Statistics & Data Pre-processing
+'''
 
 import pandas as pd
 
 
-# In[2]:
-
-
-df=pd.read_csv("/public/bmort/python/bank.csv")
-
-
-# ## B
-
-# In[3]:
-
-
+df=pd.read_csv("/public/melmahgo/python/bank.csv")
 df.isna().sum()
-
-
-# In[4]:
 
 
 imputed_value= df['age'].mean()
-df['age'] = df['age'].fillna(imputed_value)
-df.isna().sum()
-
-
-# There was 1 missing value of age so I imputed it with the mean value of the age.
-
-# ## C
-
-# In[5]:
-
+df['age'] = df['age'].fillna(imputed_value) # impute missing value with mean value of the age.
+df.isna().sum() 
 
 df.describe()
-
-
-# In[6]:
-
-
 df
-
-
-# Previous and campaign have a similar range values. emp.var.rate and euribo3m have similar range values also. Age and cons.conf.indx have similar range values. Values for age, previous, cons.price.idx, cons.conf.idx and nr.employed have the similar magnitude in each column, as in each column the values are within the same powers of 10.
-
-# ## D
-
-# In[7]:
 
 
 from sklearn import preprocessing
 
-
-# In[8]:
-
-
 le = preprocessing.LabelEncoder()
-
-
-# In[9]:
-
 
 le.fit(df['job'])
 df['job'] = le.transform(df['job'])
@@ -93,15 +50,14 @@ df['y'] = le.transform(df['y'])
 list(df.columns)
 
 
-# ## E & F
-
-# In[10]:
+'''
+Partition the data set so that 80% is used for training and 20% used for
+testing the model
+'''
 
 
 from sklearn.model_selection import train_test_split
 
-
-# In[11]:
 
 
 X = df[['age',
@@ -121,21 +77,14 @@ X = df[['age',
  'nr.employed']].to_numpy()
 
 
-# In[12]:
 
 
 y =df['y'].to_numpy()
-
-
-# In[13]:
-
-
 X_train, X_test, y_train, y_test = train_test_split(X,y, test_size=0.2)
 
-
-# ## G
-
-# In[14]:
+'''
+Using Logistic regression model as the outcome is binary
+'''
 
 
 from sklearn.linear_model import LogisticRegression
@@ -143,9 +92,10 @@ model = LogisticRegression(solver = 'liblinear')
 model.fit(X_train, y_train)
 
 
-# ## H
-
-# In[15]:
+'''
+Using Scikit-Learn's KFold() k-fold cross-validation function on the training data to
+demonstrate that the model does not overfit the data. 
+'''
 
 
 from sklearn.model_selection import KFold, cross_val_score
@@ -157,9 +107,9 @@ print("Accuracy: %0.2f +/- %0.2f" % (scores.mean(), scores.std()) )
 
 # The accuracy of the model based on KFold cross validation is 90%
 
-# ## I
-
-# In[16]:
+'''
+Testing model on predicting the action of the customer to sign up or not sign up for a checking account.
+'''
 
 
 from sklearn import metrics
@@ -167,17 +117,13 @@ y_pred=model.predict(X_test)
 metrics.accuracy_score(y_test, y_pred)
 
 
-# ## J
-
-# In[17]:
-
-
+'''
+Confusion matrix for the test data set to demonstrate the accuracy of the
+model.
+'''
 
 cmatrix = metrics.confusion_matrix(y_test, y_pred)
 cmatrix
-
-
-# In[18]:
 
 
 metrics.accuracy_score(y_test, y_pred)
@@ -185,17 +131,14 @@ metrics.accuracy_score(y_test, y_pred)
 
 # The accuracy of the model on the test set is slightly lower than the one on the training set.
 
-# ## K
-
-# In[19]:
+'''
+Classifying the outcome of the customers on new data, based on model
+'''
 
 
 testdf= pd.read_csv('/public/bmort/python/bank-unknown.csv')
 testdf1= pd.read_csv('/public/bmort/python/bank-unknown.csv')
 testdf
-
-
-# In[20]:
 
 
 le.fit(testdf['job'])
@@ -223,9 +166,6 @@ testdf['day_of_week'] = le.transform(testdf['day_of_week'])
 list(testdf.columns)
 
 
-# In[21]:
-
-
 Xtest = testdf[['age',
  'job',
  'marital',
@@ -243,31 +183,19 @@ Xtest = testdf[['age',
  'nr.employed']].to_numpy()
 
 
-# In[22]:
+
 
 
 ytest=model.predict(Xtest)
-
-
-# In[23]:
-
-
 testdf['y']=ytest
-
-
-# In[24]:
-
-
 testdf[testdf['y']==1]
 
+'''
+Complete the analysis once more, but this time preprocessing the data with
+standardization applied to the columns containing numerical data.
+'''
 
-# ## L
 
-# In[25]:
-
-
-#campaign	pdays	previous	emp.var.rate	cons.price.idx	cons.conf.idx	euribor3m	nr.employed
-import numpy as np
 from sklearn.preprocessing import StandardScaler
 scaler = StandardScaler()
 testdf1[['age']]= scaler.fit_transform(testdf1[['age']]) ## scale data in the age column
@@ -281,8 +209,6 @@ testdf1[['euribor3m']]= scaler.fit_transform(testdf1[['euribor3m']])
 testdf1[['nr.employed']]= scaler.fit_transform(testdf1[['nr.employed']])
 testdf1.fillna(testdf1.mean())
 
-
-# In[26]:
 
 
 le.fit(testdf1['job'])
@@ -306,10 +232,6 @@ testdf1['poutcome'] = le.transform(testdf1['poutcome'])
 le.fit(testdf1['day_of_week'])
 testdf1['day_of_week'] = le.transform(testdf1['day_of_week'])
 
-
-# In[27]:
-
-
 Xx= testdf1[['age',
  'job',
  'marital',
@@ -326,34 +248,14 @@ Xx= testdf1[['age',
  'euribor3m',
  'nr.employed']].to_numpy()
 
-
-# In[28]:
-
-
 y1test=model.predict(Xx)
-
-
-# In[29]:
-
-
 metrics.accuracy_score(ytest, y1test)
-
-
-# In[30]:
-
-
 testdf1['y']=y1test
-
-
-# In[31]:
-
-
 testdf1[testdf1['y']==1]
 
 
 # The accuracy is significantly lower and the labels assigned to the unknown customers do change. 
-
-# In[ ]:
+# i.e. the additional preprocessing impacts the accuracy and outcome of the model
 
 
 
