@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
-# Jupyter notebook with 1 core and 4 GB of RAM using the Python 3 anaconda3 2019.3 kernel.
+# Jupyter notebook with 1 core and 4 GB of RAM using the Python 3 anaconda3 2019.3 kernel
 
 '''
 Summary Statistics & Data Pre-processing
