@@ -2,8 +2,8 @@
 
 Projects completed for University classes in python
 
-## bank_clients_classification.py:
-### Final Project: Tools for Data Science (May 2020)
+### bank_clients_classification.py:
+#### Final Project: Tools for Data Science (May 2020)
 
 The data in the file /public/melmahgo/python/bank.csv contains the following information 
 about thepotential customers: age, type of job, marital status, education level, if 
