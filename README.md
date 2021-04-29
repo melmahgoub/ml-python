@@ -1,6 +1,6 @@
 # ml-python
 
-Projects completed for University classes in python
+Machine Learning projects completed for University classes in python
 
 ### bank_clients_classification.py:
 #### Final Project: Tools for Data Science (May 2020)
